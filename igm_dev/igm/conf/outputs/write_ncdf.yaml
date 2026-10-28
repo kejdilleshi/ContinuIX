@@ -1,0 +1,13 @@
+write_ncdf:
+  output_file: output.nc
+  keep_open: false
+  vars_to_save:
+    - topg
+    - usurf
+    - thk
+    - smb
+    - velbar_mag
+    - velsurf_mag
+    - uvelsurf
+    - vvelsurf
+    - wvelsurf

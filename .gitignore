@@ -1,0 +1,39 @@
+# Bulk data and run outputs (tens of GB) — keep out of git
+/input_data/
+/data/
+/results/
+/archive/
+/logs/
+/GROUP_UNIL/
+/devrun/data
+/devrun/assimilations
+/smbrun/data
+/smbrun/assimilations
+
+# Symlink into the igm-smb-inference repo
+/user
+/devrun/user
+/smbrun/user
+
+# Python / build artefacts
+__pycache__/
+*.pyc
+
+# Large binary / array formats
+*.nc
+*.h5
+*.npy
+*.npz
+*.tif
+*.zip
+*.tar*
+
+# LaTeX build products (the PDFs are rebuilt with make_assets*.py + tectonic)
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+
+# ...but keep the bundled CNN emulator weights
+!/igm_dev/**/*.h5

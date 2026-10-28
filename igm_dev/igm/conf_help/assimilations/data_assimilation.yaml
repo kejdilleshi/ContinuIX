@@ -1,0 +1,259 @@
+store_freq:
+  Type: integer
+  Description: "Frequency (in iterations) at which the combined DA mapping stores in-memory snapshots of the optimization variable fields (0 = disabled)."
+  Units: dimless
+control_list:
+  Type: list
+  Description: "List of optimized variables for the optimization."
+  Units: dimless
+cost_list:
+  Type: list
+  Description: "List of cost components for the optimization."
+  Units: dimless
+variables:
+  Type: list
+  Description: "List of variable specifications (name, transform, and optional bounds) defining which fields are jointly optimized by the combined data assimilation mapping."
+  Units: dimless
+optimizer:
+  Type: string
+  Description: "Reserved field for optimizer selection at the top level; currently not read by the code — the active method is set by `optimization.method`."
+  Units: dimless
+optimization:
+  nbitmin:
+    Type: integer
+    Description: "Min iterations for the optimization."
+    Units: dimless
+  nbitmax:
+    Type: integer
+    Description: "Max iterations for the optimization."
+    Units: dimless
+  step_size:
+    Type: float
+    Description: "Step size for the optimization."
+    Units: dimless
+  step_size_decay:
+    Type: float
+    Description: "Decay step size parameter for the optimization."
+    Units: dimless
+  init_zero_thk:
+    Type: boolean
+    Description: "Initialize the optimization with zero ice thickness."
+    Units: dimless
+  sole_mask:
+    Type: boolean
+    Description: "Restrict gradient updates to the ice-covered area only, preventing changes to controls outside the glacier mask."
+    Units: dimless
+  retrain_iceflow_model:
+    Type: boolean
+    Description: "Retrain the iceflow model simultaneously?"
+    Units: dimless
+  fix_opti_normalization_issue:
+    Type: boolean
+    Description: "Formerly, the oce was mixing reduce_mean and l2_loss leading to dependence to the resolution of the grid"
+    Units: dimless
+  method:
+    Type: string
+    Description: "Optimization method to use, either ADAM or L-BFGS."
+    Units: dimless
+  obstacle_constraint:
+    Type: list
+    Description: "Actions to apply obstacle constraints, either reproject or penalty or both (current default)"
+    Units: dimless
+  optimizer_clipnorm:
+    Type: float
+    Description: "If set, the gradient of each weight is individually clipped so that its norm is no higher than this value"
+    Units: dimless
+  optimizer_epsilon:
+    Type: float
+    Description: "A small constant for numerical stability for the Adam optimizer."
+    Units: dimless
+  pertubate:
+    Type: boolean
+    Description: "Perturbate the emulator for training to get better gradients estimates along controls to be optimized"
+    Units: dimless
+  nb_relaxation_steps:
+    Type: integer
+    Description: "Number of forward ice dynamics relaxation steps applied after the final optimization iteration to refine the ice geometry solution."
+    Units: dimless
+  patch_size:
+    Type: integer
+    Description: "Patch-wise (out-of-core) inversion: when the grid exceeds patch_size in any dimension, the gradient tape runs on overlapping windows of patch_size + 2*patch_halo and only the halo-stripped core of each window gradient is kept, bounding peak GPU memory by the window size. 0 disables (always full-grid tape). Grids <= patch_size take the unchanged full-grid path."
+    Units: gridpoint
+  patch_halo:
+    Type: integer
+    Description: "Halo width of the patch-wise inversion windows; must exceed the iceflow emulator receptive-field radius so that halo-stripped window gradients equal the full-grid gradient."
+    Units: gridpoint
+  relaxation_freq:
+    Type: integer
+    Description: "If > 0, also apply the nb_relaxation_steps relaxation every relaxation_freq optimization iterations (interleaved), so the optimizer can re-compensate the misfit after each physical projection. 0 = terminal-only (legacy). Requires the thk process group to be loaded."
+    Units: dimless
+  patience:
+    Type: integer
+    Description: "Window size (in iterations) for rolling-average early stopping: halts if the recent velsurf cost average exceeds 1.1x the historical best over this window (0 = disabled)."
+    Units: dimless
+regularization:
+  thk:
+    Type: float
+    Description: "Regularization weight for the ice thickness in the optimization."
+    Units: dimless
+  thk_version:
+    Type: integer
+    Description: "Ice thickness regularization scheme: 1 = gradient-only (v1), 2 = combined gradient + second-derivative (v2)."
+    Units: dimless
+  thk_2nd_der:
+    Type: float
+    Description: "Weight for the second-derivative (smoothness) term in the ice thickness regularization."
+    Units: dimless
+  thk_1st_der:
+    Type: float
+    Description: "Weight for the first-derivative (gradient) term in the ice thickness regularization."
+    Units: dimless
+  thk_1st_der_disc_version:
+    Type: string
+    Description: "Discretization scheme for the first-derivative regularization term (e.g., `new` or `old`)."
+    Units: dimless
+  abl_acc_balance:
+    Type: float
+    Description: "Asymmetry factor for second-derivative regularization: accumulation zone is weighted by this value and ablation zone by its inverse; 1 = uniform weighting."
+    Units: dimless
+  smooth_anisotropy_var:
+    Type: string
+    Description: "Variable used to define the anisotropy direction for smoothing regularization (e.g., `vel`)."
+    Units: dimless
+  slidingco:
+    Type: float
+    Description: "Regularization weight for the slidingco field in the optimization."
+    Units: dimless
+  arrhenius:
+    Type: float
+    Description: "Regularization weight for the arrhenius field in the optimization."
+    Units: dimless
+  divflux:
+    Type: float
+    Description: "Regularization weight for the divergence field in the optimization."
+    Units: dimless
+  smooth_anisotropy_factor:
+    Type: float
+    Description: "Smooth anisotropy factor for the ice thickness regularization in the optimization"
+    Units: dimless
+  smooth_anisotropy_factor_sl:
+    Type: float
+    Description: "Smooth anisotropy factor for the slidingco regularization in the optimization"
+    Units: dimless
+  convexity_weight:
+    Type: float
+    Description: "Convexity weight for the ice thickness regularization in the optimization."
+    Units: dimless
+  convexity_power:
+    Type: float
+    Description: "Power b in the area-volume scaling V ~ a * A^b taken from 'An estimate of global glacier volume', A. Grinsted, TC, 2013."
+    Units: dimless
+  to_regularize:
+    Type: string
+    Description: "'Field to regularize: topg or thk.'"
+    Units: dimless
+fitting:
+  usurfobs_std:
+    Type: float
+    Description: "Confidence/STD of the top ice surface as input data for the optimization."
+    Units: m
+  velsurfobs_std:
+    Type: float
+    Description: "Confidence/STD of the surface ice velocities as input data for the optimization (if 0, velsurfobs_std field must be given)"
+    Units: m y^{-1}
+  thkobs_std:
+    Type: float
+    Description: "Confidence/STD of the ice thickness profiles (unless given)."
+    Units: m
+  divfluxobs_std:
+    Type: float
+    Description: "Confidence/STD of the flux divergence as input data for the optimization (if 0, divfluxobs_std field must be given)"
+    Units: TBD
+  volobsprop_std:
+    Type: float
+    Description: "Proportional standard deviation of the target volume observation; scales the volume misfit cost term relative to the target volume (lower = stronger constraint)."
+    Units: dimless
+  uniformize_thkobs:
+    Type: boolean
+    Description: "uniformize the density of thkobs."
+    Units: dimless
+  include_low_speed_term:
+    Type: boolean
+    Description: "Add a cost term that penalizes unrealistically low surface velocities in glacierized areas."
+    Units: dimless
+  velsurfobs_thr:
+    Type: float
+    Description: "Threshold for the surface ice velocities as input data for the optimization, anything below this value will be ignored"
+    Units: m y^{-1}
+  log_slidingco:
+    Type: boolean
+    Description: "Optimize the log of the sliding coefficient instead of the slidingco itself"
+    Units: dimless
+divflux:
+  method:
+    Type: string
+    Description: "Compute the divergence of the flux using the upwind or centered method."
+    Units: dimless
+  force_zero_sum:
+    Type: boolean
+    Description: "Add a penalty to the cost function to force the sum of the divergence of the flux to be zero"
+    Units: dimless
+scaling:
+  thk:
+    Type: float
+    Description: "Scaling factor for the ice thickness in the optimization, serves to adjust step-size of each control relative to each other"
+    Units: dimless
+  usurf:
+    Type: float
+    Description: "Scaling factor for the ice thickness in the optimization, serves to adjust step-size of each control relative to each other"
+    Units: dimless
+  slidingco:
+    Type: float
+    Description: "Scaling factor for the slidingco in the optimization, serves to adjust step-size of each control relative to each other"
+    Units: dimless
+  arrhenius:
+    Type: float
+    Description: "Scaling factor for the Arrhenius in the optimization, serves to adjust step-size of each control relative to each other"
+    Units: dimless
+output:
+  freq:
+    Type: integer
+    Description: "Frequency of the output for the optimization."
+    Units: dimless
+  plot2d_live:
+    Type: boolean
+    Description: "Show 2D inversion plots live during optimization."
+    Units: dimless
+  plot2d:
+    Type: boolean
+    Description: "Save 2D inversion plots at each output step."
+    Units: dimless
+  save_result_in_ncdf:
+    Type: file path
+    Description: "Name of the NetCDF file in which the optimized fields are saved."
+    Units: dimless
+  save_iterat_in_ncdf:
+    Type: boolean
+    Description: "Save each optimization iteration to a NetCDF file for post-processing."
+    Units: dimless
+  editor_plot2d:
+    Type: string
+    Description: "Optimized for VS Code (`vs`) or Spyder (`sp`) for live plotting."
+    Units: dimless
+  vars_to_save:
+    Type: list
+    Description: "List of variables to be recorded in the ncdf file."
+    Units: dimless
+cook:
+  infer_params:
+    Type: boolean
+    Description: "Infer slidingco and convexity weight from velocity observations."
+    Units: dimless
+  tidewater_glacier:
+    Type: boolean
+    Description: "Is the glacier you're trying to infer parameters for a tidewater type?"
+    Units: dimless
+  vol_std:
+    Type: float
+    Description: "Confidence/STD of the volume estimates from volume-area scaling."
+    Units: TBD

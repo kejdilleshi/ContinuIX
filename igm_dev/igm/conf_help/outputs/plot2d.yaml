@@ -1,0 +1,20 @@
+editor:
+  Type: string
+  Units: dimless
+  Description: "Optimized for VS code (vs) or spyder (sp) for live plot."
+live:
+  Type: boolean
+  Units: dimless
+  Description: "Display plots live the results during computation instead of making png."
+particles:
+  Type: boolean
+  Units: dimless
+  Description: "Display particles if True."
+var:
+  Type: string
+  Units: dimless
+  Description: "Name of the variable to plot."
+var_max:
+  Type: float
+  Units: dimless
+  Description: "Maximum value of the varplot variable used to adjust the scaling of the colorbar."

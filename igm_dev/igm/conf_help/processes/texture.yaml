@@ -1,0 +1,20 @@
+format:
+  Type: string
+  Units: dimless
+  Description: "Format of the texture image (png, tif, or tiff)."
+model_path:
+  Type: file path
+  Units: dimless
+  Description: "Name of the folder for the texture model (tf format)."
+verbosity:
+  Type: integer
+  Units: dimless
+  Description: "Python Logger verbosity level (10=DEBUG, 20=INFO, 30=WARNING, 40=ERROR, 50=CRITICAL)"
+divide_by_density:
+  Type: integer
+  Units: dimless
+  Description: "Divisor applied to the precipitation field when converting from model units to monthly values for texture generation; set to 1 to disable unit conversion."
+resolution:
+  Type: integer
+  Units: dimless
+  Description: "Override the grid resolution for texture generation; set to -1 to use the simulation resolution."

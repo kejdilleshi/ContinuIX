@@ -1,0 +1,57 @@
+input_file:
+  Type: string
+  Units: dimless
+  Description: "NetCDF input data file."
+time:
+  Type: float | null
+  Units: yr
+  Description: "Time record to load. When omitted, use processes.time.start if available, otherwise the first record."
+method_coarsen:
+  Type: string
+  Units: dimless
+  Description: "Method for coarsening the data from NetCDF file (skipping or cubic_spline)."
+coarsen:
+  Type: int
+  Units: dimless
+  Description: "Coarsen the data from NetCDF file by a certain (integer) number (2 would be twice coarser ignore data each 2 grid points)."
+crop:
+  Type: boolean
+  Units: dimless
+  Description: "Crop the data from NetCDF file with given top/down/left/right bounds."
+xmin:
+  Type: float
+  Units: m
+  Description: "X left coordinate for cropping the NetCDF data."
+xmax:
+  Type: float
+  Units: m
+  Description: "X right coordinate for cropping the NetCDF data."
+ymin:
+  Type: float
+  Units: m
+  Description: "Y bottom coordinate for cropping the NetCDF data."
+ymax:
+  Type: float
+  Units: m
+  Description: "Y top coordinate for cropping the NetCDF data."
+icemask_include:
+  Type: boolean
+  Units: dimless
+  Description: "Include ice mask in the NetCDF file."
+icemask_shapefile:
+  Type: string
+  Units: dimless
+  Description: "Shapefile for ice mask."
+icemask_invert:
+  Type: boolean
+  Units: dimless
+  Description: "Invert the ice mask."
+water_level:
+  include:
+    Type: boolean
+    Units: dimless
+    Description: "Create a uniform 2D `state.water_level` field. Only applied if `water_level` is not already present in the input NetCDF. Required by the iceflow `floating` energy component for marine / tidewater setups."
+  value:
+    Type: float
+    Units: m
+    Description: "Value (in metres) used to fill the uniform `water_level` field when `include: True`."
